@@ -8,7 +8,7 @@
         body, html {
             font-family: 'Arial', sans-serif;
             text-align: center;
-            background-color: #e0f7fa; /* Светло-голубой фон игрового поля */
+            background-color: #e0f7fa;
             margin: 0;
             padding: 0;
             height: 100%;
@@ -32,6 +32,7 @@
             border: none;
             border-radius: 10px;
             transition: background-color 0.3s, transform 0.3s;
+            width: 100%;
         }
         button:hover {
             transform: scale(1.05);
@@ -40,42 +41,55 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #ffeb3b; /* Яркий фон меню */
+            background-color: #ffeb3b;
             color: #333;
             padding: 40px 20px;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             position: relative;
         }
-        #menu::before {
-            content: '🎰';
-            font-size: 80px;
+        #menu::before, #menu::after {
+            content: '🎲'; /* Переключение на символ казино */
+            font-size: 100px;
             position: absolute;
-            top: 10px;
-            left: 10px;
             opacity: 0.1;
+        }
+        #menu::before {
+            top: -50px;
+            right: -50px;
+            transform: rotate(45deg);
+        }
+        #menu::after {
+            content: '🎰'; /* Добавлен символ казино */
+            bottom: -50px;
+            left: -50px;
+            transform: rotate(45deg);
         }
         #menu h1 {
             font-size: 48px;
             margin-bottom: 20px;
         }
-        #menu .balance {
+        #menu .balance, #menu .scoreboard {
             font-size: 24px;
             margin-bottom: 10px;
-        }
-        #menu .scoreboard {
             display: flex;
             justify-content: space-between;
             width: 100%;
-            margin-bottom: 30px;
         }
         #menu .score {
             font-size: 20px;
         }
-        #menu .play-button, #menu .balance-button, #menu .rules-button {
+        #menu .play-button {
             background-color: #4caf50;
             color: #fff;
-            width: 100%;
+        }
+        #menu .balance-button {
+            background-color: #0288d1;
+            color: #fff;
+        }
+        #menu .rules-button {
+            background-color: #03a9f4;
+            color: #fff;
         }
         #gameArea {
             text-align: center;
@@ -161,6 +175,12 @@
         <button class="play-button" onclick="startGame()">Play</button>
         <button class="balance-button" onclick="showBalance()">Balance</button>
         <button class="rules-button" onclick="showRules()">Rules</button>
+        <div class="pokersymbol" id="symbol1">♠️</div>
+        <div class="pokersymbol" id="symbol2">♥️</div>
+        <div class="pokersymbol" id="symbol3">♦️</div>
+        <div class="pokersymbol" id="symbol4">♣️</div>
+        <div class="pokersymbol" id="symbol5">♠️</div>
+        <div class="pokersymbol" id="symbol6">♦️</div>
     </div>
     <div id="gameArea" style="display:none;">
         <div id="dealerArea">
