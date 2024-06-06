@@ -39,6 +39,7 @@
             font-size: 18px;
             font-weight: bold;
             position: relative;
+            color: #333;
         }
         .red { color: red; }
         .black { color: black; }
@@ -58,6 +59,7 @@
         }
         .hidden-card {
             background-color: #000;
+            border-color: #000;
             color: #fff;
             font-size: 24px;
         }
@@ -86,7 +88,7 @@
         </div>
         <button onclick="hit()">Hit</button>
         <button onclick="stand()">Stand</button>
-        <button onclick="returnToMenu()" style="display:none;">Вернуться в меню</button>
+        <button onclick="returnToMenu()">Вернуться в меню</button>
         <h2>Ваш счет: <span id="playerScore"></span></h2>
         <div id="result"></div>
     </div>
@@ -107,12 +109,11 @@
             document.getElementById('coins').innerText = coins;
             document.getElementById('menu').style.display = 'none';
             document.getElementById('gameArea').style.display = 'block';
-            document.querySelector("#returnToMenu").style.display = 'block';
             deck = createDeck();
             shuffleDeck(deck);
             dealerCards = [drawCard(), drawCard()];
             playerCards = [drawCard(), drawCard()];
-            renderCards();
+            renderCards('initial');
             updateScores();
         }
 
@@ -143,10 +144,10 @@
         function dealerTurn() {
             while (getTotal(dealerCards) < 17) {
                 dealerCards.push(drawCard());
-                renderCards();
-                updateScores();
-                checkGameEnd();
             }
+            renderCards('reveal');
+            updateScores();
+            checkGameEnd();
         }
 
         function getTotal(cards) {
@@ -193,9 +194,16 @@
             }
         }
 
-        function renderCards() {
+        function renderCards(stage) {
             const dealerDiv = document.getElementById('dealerCards');
-            dealerDiv.innerHTML = '<div class="card hidden-card">✖️</div><div class="card ' + dealerCards[0].color + '" data-suit="' + dealer__cards[0].suit + '">' + dealerCards[0].rank + '</div>';
+            dealerDiv.innerHTML = '';
+            dealerCards.forEach((card, index) => {
+                if (index === 1 && stage === 'initial') {
+                    dealerDiv.innerHTML += '<div class="card hidden-card">✖️</div>';
+                } else {
+                    dealerDiv.innerHTML += '<div class="card ' + card.color + '" data-suit="' + card.suit + '">' + card.rank + '</div>';
+                }
+            });
             const playerDiv = document.getElementById('playerCards');
             playerDiv.innerHTML = '';
             playerCards.forEach(card => {
@@ -208,10 +216,13 @@
             document.getElementById('playerScore').innerText = playerScore;
         }
 
-        function checkGameEnd() {
+                function checkGameEnd() {
             const playerTotal = getTotal(playerCards);
             const dealerTotal = getTotal(dealerCards);
             const resultDiv = document.getElementById('result');
+
+            renderCards('reveal');  // Reveal all dealer's cards
+
             if (playerTotal > 21) {
                 resultDiv.innerText = 'Перебор! Вы проиграли.';
                 coins -= betAmount;
@@ -224,7 +235,16 @@
             } else if (dealerTotal === 21 && dealerCards.length === 2) {
                 resultDiv.innerText = 'Блэкджек у дилера! Вы проиграли.';
                 coins -= betAmount;
+            } else if (playerTotal > dealerTotal) {
+                resultDiv.innerText = 'Вы выиграли!';
+                coins += betAmount * 2;
+            } else if (playerTotal < dealerTotal) {
+                resultDiv.innerText = 'Вы проиграли.';
+                coins -= betAmount;
+            } else {
+                resultDiv.innerText = 'Ничья.';
             }
+
             document.getElementById('coins').innerText = coins;
             document.querySelector("#returnToMenu").style.display = 'block';
         }
