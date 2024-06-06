@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blackjack Game</title>
+    <title>Игра в Блэкджек</title>
     <style>
         body, html {
             font-family: 'Arial', sans-serif;
@@ -32,34 +32,34 @@
             background-color: #fff;
             border: 1px solid #000;
             margin: 0 5px;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: bold;
+            background-size: cover;
+        }
+        h2, h1 {
+            color: #333;
         }
     </style>
 </head>
 <body>
     <div id="menu">
-        <h1>Blackjack</h1>
-        <div>Your Coins: <span id="coins">1000</span></div>
+        <h1>Блэкджек</h1>
+        <div>Ваши монеты: <span id="coins">1000</span></div>
         <button onclick="startGame()">Start Game</button>
         <button onclick="addFunds()">Add Funds</button>
         <button onclick="showLeaderboard()">Top Players</button>
+        <button onclick="showRules()">Правила</button>
     </div>
     <div id="gameArea" style="display:none;">
         <div id="dealerArea">
-            <h2>Dealer's Cards</h2>
+            <h2>Карты дилера</h2>
             <div id="dealerCards"></div>
         </div>
         <div id="playerArea">
-            <h2>Your Cards</h2>
+            <h2>Ваши карты</h2>
             <div id="playerCards"></div>
         </div>
         <button onclick="hit()">Hit</button>
         <button onclick="stand()">Stand</button>
+        <h2>Ваш счет: <span id="playerScore"></span></h2>
         <div id="result"></div>
     </div>
     <script>
@@ -67,15 +67,17 @@
         let dealerCards = [];
         let playerCards = [];
         let deck = [];
+        let playerScore = 0;
 
         function startGame() {
             document.getElementById('menu').style.display = 'none';
             document.getElementById('gameArea').style.display = 'block';
             deck = createDeck();
             shuffleDeck(deck);
-            dealerCards = [drawCard(), drawTotal()];
-            playerCards = [drawCard(), draw];
+            dealerCards = [drawCard(), drawCard()];
+            playerCards = [drawCard(), drawCard()];
             renderCards();
+            updateScores();
         }
 
         function addFunds() {
@@ -84,12 +86,17 @@
         }
 
         function showLeaderboard() {
-            alert("Leaderboard functionality not implemented.");
+            alert("Функционал лидеров не реализован.");
+        }
+
+        function showRules() {
+            alert("Игрок и дилер получают по две карты. Цель игры - набрать 21 очко или близкое к этому число, не превышая его. Карты 'J', 'Q', 'K' стоят 10 очков, туз может стоить 1 или 11 очков, остальные карты соответствуют своему номиналу.");
         }
 
         function hit() {
             playerCards.push(drawCard());
             renderCards();
+            updateScores();
             checkGameEnd();
         }
 
@@ -101,6 +108,7 @@
             while (getTotal(dealerCards) < 17) {
                 dealerCards.push(drawCard());
                 renderCards();
+                updateScores();
                 checkGameEnd();
             }
         }
@@ -115,7 +123,7 @@
                 } else if (['J', 'Q', 'K'].includes(card.rank)) {
                     total += 10;
                 } else {
-                    total += card.rank;
+                    total += parseInt(card.rank);
                 }
             });
             while (total > 21 && aceCount > 0) {
@@ -135,7 +143,7 @@
             const newDeck = [];
             suits.forEach(suit => {
                 ranks.forEach(rank => {
-                    newDeck.push({ suit, rank });
+                    newDeck.push({ suit, rank, image: `images/${rank}_of_${suit}.png` });
                 });
             });
             return newDeck;
@@ -150,16 +158,17 @@
 
         function renderCards() {
             const dealerDiv = document.getElementById('dealerCards');
-            dealerDiv.innerHTML = '';
-            dealerCards.forEach(card => {
-                dealerDiv.innerHTML += `<div class="card">${card.rank} of ${card.suit}</div>`;
-            });
-
+            dealerDiv.innerHTML = '<div class="card" style="background-image:url(\'' + dealerCards[0].image + '\')"></div><div class="card"></div>';
             const playerDiv = document.getElementById('playerCards');
             playerDiv.innerHTML = '';
             playerCards.forEach(card => {
-                playerDiv.innerHTML += `<div class="card">${card.rank} of ${card.suit}</div>`;
+                playerDiv.innerHTML += `<div class="card" style="background-image:url('${card.image}')"></div>`;
             });
+        }
+
+        function updateScores() {
+            playerScore = getTotal(playerCards);
+            document.getElementById('playerScore').innerText = playerPlay;
         }
 
         function checkGameEnd() {
@@ -167,15 +176,13 @@
             const dealerTotal = getTotal(dealerCards);
             const resultDiv = document.getElementById('result');
             if (playerTotal > 21) {
-                resultDiv.innerText = 'Player busts! Dealer wins.';
+                resultDiv.innerText = 'Перебор! Вы проиграли.';
             } else if (dealerTotal > 21) {
-                resultDiv.innerText = 'Dealer busts! Player wins.';
+                resultDiv.innerText = 'Перебор у дилера! Вы выиграли.';
             } else if (playerTotal === 21 && playerCards.length === 2) {
-                resultDiv.innerText = 'Blackjack! Player wins.';
+                resultDiv.innerText = 'Блэкджек! Вы выиграли.';
             } else if (dealerTotal === 21 && dealerCards.length === 2) {
-                resultDiv.innerText = 'Blackjack! Dealer wins.';
-            } else if (playerTotal >= dealerTotal && playerCards.length >= 2) {
-                resultDiv.innerText = 'Player stands. Final decision pending.';
+                resultDiv.innerText = 'Блэкджек у дилера! Вы проиграли.';
             }
         }
     </script>
