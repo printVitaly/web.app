@@ -30,7 +30,7 @@
             width: 60px;
             height: 90px;
             background-color: #fff;
-            border-radius: 8px;
+            border-radius: 10px;
             border: 1px solid #000;
             margin: 5px;
             display: flex;
@@ -38,10 +38,29 @@
             justify-content: center;
             font-size: 18px;
             font-weight: bold;
-            color: #333;
+            position: relative;
         }
         .red { color: red; }
         .black { color: black; }
+        .card::before {
+            content: attr(data-suit);
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 10px;
+        }
+        .card::after {
+            content: attr(data-suit);
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            font-size: 10px;
+        }
+        .hidden-card {
+            background-color: #000;
+            color: #fff;
+            font-size: 24px;
+        }
         h2, h1 {
             color: #333;
         }
@@ -67,6 +86,7 @@
         </div>
         <button onclick="hit()">Hit</button>
         <button onclick="stand()">Stand</button>
+        <button onclick="returnToMenu()" style="display:none;">Вернуться в меню</button>
         <h2>Ваш счет: <span id="playerScore"></span></h2>
         <div id="result"></div>
     </div>
@@ -76,10 +96,18 @@
         let playerCards = [];
         let deck = [];
         let playerScore = 0;
+        let betAmount = 1000;
 
         function startGame() {
+            if (coins < betAmount) {
+                alert("Недостаточно средств для начала игры.");
+                return;
+            }
+            coins -= betAmount;
+            document.getElementById('coins').innerText = coins;
             document.getElementById('menu').style.display = 'none';
             document.getElementById('gameArea').style.display = 'block';
+            document.querySelector("#returnToMenu").style.display = 'block';
             deck = createDeck();
             shuffleDeck(deck);
             dealerCards = [drawCard(), drawCard()];
@@ -146,12 +174,12 @@
         }
 
         function createDeck() {
-            const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
+            const suits = ['♦️', '♣️', '♠️', '♥️'];
             const ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A'];
             const newDeck = [];
             suits.forEach(suit => {
                 ranks.forEach(rank => {
-                    let color = (suit === 'Hearts' || suit === 'Diamonds') ? 'red' : 'black';
+                    let color = (suit === '♥️' || suit === '♦️') ? 'red' : 'black';
                     newDeck.push({ suit, rank, color });
                 });
             });
@@ -167,11 +195,11 @@
 
         function renderCards() {
             const dealerDiv = document.getElementById('dealerCards');
-            dealerDiv.innerHTML = '<div class="card black" style="visibility: hidden;">' + dealerCards[1].rank + '</div><div class="card ' + dealerCards[0].color + '">' + dealerCards[0].rank + ' of ' + dealerCards[0].suit + '</div>';
+            dealerDiv.innerHTML = '<div class="card hidden-card">✖️</div><div class="card ' + dealerCards[0].color + '" data-suit="' + dealer__cards[0].suit + '">' + dealerCards[0].rank + '</div>';
             const playerDiv = document.getElementById('playerCards');
             playerDiv.innerHTML = '';
             playerCards.forEach(card => {
-                playerDiv.innerHTML += '<div class="card ' + card.color + '">' + card.rank + ' of ' + card.suit + '</div>';
+                playerDiv.innerHTML += '<div class="card ' + card.color + '" data-suit="' + card.suit + '">' + card.rank + '</div>';
             });
         }
 
@@ -186,13 +214,25 @@
             const resultDiv = document.getElementById('result');
             if (playerTotal > 21) {
                 resultDiv.innerText = 'Перебор! Вы проиграли.';
+                coins -= betAmount;
             } else if (dealerTotal > 21) {
                 resultDiv.innerText = 'Перебор у дилера! Вы выиграли.';
+                coins += betAmount * 2;
             } else if (playerTotal === 21 && playerCards.length === 2) {
                 resultDiv.innerText = 'Блэкджек! Вы выиграли.';
+                coins += betAmount * 2.5;
             } else if (dealerTotal === 21 && dealerCards.length === 2) {
                 resultDiv.innerText = 'Блэкджек у дилера! Вы проиграли.';
+                coins -= betAmount;
             }
+            document.getElementById('coins').innerText = coins;
+            document.querySelector("#returnToMenu").style.display = 'block';
+        }
+
+        function returnToMenu() {
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('menu').style.display = 'block';
+            document.querySelector("#returnToMenu").style.display = 'none';
         }
     </script>
 </body>
