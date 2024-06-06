@@ -5,59 +5,70 @@
 <title>Тест на реакцию</title>
 <style>
   body {
-    font-family: Arial, sans-serif; /* Устанавливаем шрифт */
-    background-color: #87CEEB; /* Голубой цвет фона */
+    font-family: Arial, sans-serif;
+    background-color: #87CEEB;
     margin: 0;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column; /* Выравниваем элементы в колонку */
-    touch-action: manipulation; /* Предотвращение зума при двойном тапе */
+    flex-direction: column;
+    touch-action: manipulation;
   }
 
   .button {
-    background-color: red; /* Начальный красный цвет */
-    border: none; /* Без границ */
+    background-color: red;
+    border: none;
     color: white;
-    font-size: 24px; /* Увеличенный размер шрифта */
+    font-size: 32px;
     cursor: pointer;
     border-radius: 50%;
-    width: 60vw; /* Ширина 60% от ширины экрана */
-    height: 60vw; /* Высота 60% от высоты экрана */
-    max-width: 300px; /* Максимальная ширина */
-    max-height: 300px; /* Максимальная высота */
+    width: 120vw;
+    height: 120vw;
+    max-width: 600px;
+    max-height: 600px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-weight: bold; /* Жирное начертание текста */
-    text-transform: uppercase; /* Все буквы заглавные */
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
   }
 
   .results {
-    color: black; /* Цвет текста черный */
-    font-size: 24px; /* Размер шрифта */
-    margin-top: 20px; /* Отступ сверху */
-    text-align: center; /* Выравнивание текста по центру */
+    color: black;
+    font-size: 24px;
+    margin-top: 20px;
+    text-align: center;
   }
 </style>
 </head>
 <body>
 
-<button class="button" id="startButton" onclick="startGame()">Начать игру</button>
+<div class="menu">
+  <button class="button" onclick="startGame()">Начать игру</button>
+  <button class="button" onclick="showResults()">Предыдущие результаты</button>
+</div>
 <div class="results" id="reactionTime"></div>
 
 <script>
   let startTime;
   let timer;
   let gameStarted = false;
+  let results = [];
 
   function randomDelay() {
-    return Math.random() * 2500 + 500; // Задержка от 0.5 до 3 секунд
+    return Math.random() * 2500 + 500;
   }
 
   function changeColor() {
-    const button = document.getElementById('startButton');
+    const button = document.querySelector('.menu button:first-child');
     button.style.backgroundColor = 'green';
     button.innerText = "Нажми, когда зеленая";
     startTime = performance.now();
@@ -66,24 +77,31 @@
 
   function startGame() {
     if (!gameStarted) {
-      const button = document.getElementById('startButton');
+      const button = document.querySelector('.menu button:first-child');
       button.style.backgroundColor = 'red';
       button.innerText = "Подождите зеленый цвет...";
       timer = setTimeout(changeColor, randomDelay());
+      document.getElementById('reactionTime').textContent = '';
     }
   }
 
   function recordReaction() {
-    if (gameStarted && document.getElementById('startButton').style.backgroundColor === 'green') {
-      const reactionTime = performance.now() - startTime;
-      document.getElementById('reactionTime').textContent = `Ваше время реакции: ${reactionTime.toFixed(3)} мс. Нажмите 'Начать игру' для повторной попытки.`;
+    if (gameStarted && document.querySelector('.menu button:first-child').style.backgroundColor === 'green') {
+      const reactionTime = Math.round(performance.now() - startTime);
+      results.push(reactionTime);
+      document.getElementById('reactionTime').textContent = `Ваше время реакции: ${reactionTime} мс. Нажмите 'Начать игру' для повторной попытки.`;
       gameStarted = false;
     } else if (gameStarted) {
       document.getElementById('reactionTime').textContent = "Слишком рано! Попробуйте еще раз.";
     }
   }
 
-  document.getElementById('startButton').addEventListener('click', recordReaction);
+  function showResults() {
+    let resultText = results.length ? 'Ваши предыдущие результаты (в мс): ' + results.join(', ') : 'Нет предыдущих результатов.';
+    document.getElementById('reactionTime').textContent = resultText;
+  }
+
+  document.querySelector('.menu button:first-child').addEventListener('click', recordReaction);
 </script>
 
 </body>
