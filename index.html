@@ -48,33 +48,13 @@
             position: relative;
         }
         #menu::before {
-            content: '🎲';
-            font-size: 100px;
-            position: absolute;
-            top: -50px;
-            right: -50px;
-            transform: rotate(45deg);
-            opacity: 0.1;
-        }
-        #menu::after {
-            content: '♠️♥️♦️♣️';
+            content: '🎰';
             font-size: 80px;
             position: absolute;
-            bottom: -40px;
-            left: -40px;
+            top: 10px;
+            left: 10px;
             opacity: 0.1;
         }
-        .pokersymbol {
-            font-size: 80px;
-            position: absolute;
-            opacity: 0.1;
-        }
-        #symbol1 { top: 10px; left: 10px; }
-        #symbol2 { top: 20px; right: 20px; }
-        #symbol3 { bottom: 20px; right: 50px; }
-        #symbol4 { bottom: 50px; left: 30px; }
-        #symbol5 { top: 100px; left: 150px; }
-        #symbol6 { top: 200px; right: 100px; }
         #menu h1 {
             font-size: 48px;
             margin-bottom: 20px;
@@ -92,17 +72,8 @@
         #menu .score {
             font-size: 20px;
         }
-        #menu .play-button {
+        #menu .play-button, #menu .balance-button, #menu .rules-button {
             background-color: #4caf50;
-            color: #fff;
-        }
-        #menu .balance-button {
-            background-color: #0288d1;
-            color: #fff;
-            width: 100%;
-        }
-        #menu .rules-button {
-            background-color: #03a9f4;
             color: #fff;
             width: 100%;
         }
@@ -190,12 +161,6 @@
         <button class="play-button" onclick="startGame()">Play</button>
         <button class="balance-button" onclick="showBalance()">Balance</button>
         <button class="rules-button" onclick="showRules()">Rules</button>
-        <div class="pokersymbol" id="symbol1">♠️</div>
-        <div class="pokersymbol" id="symbol2">♥️</div>
-        <div class="pokersymbol" id="symbol3">♦️</div>
-        <div class="pokersymbol" id="symbol4">♣️</div>
-        <div class="pokersymbol" id="symbol5">♠️</div>
-        <div class="pokersymbol" id="symbol6">♦️</div>
     </div>
     <div id="gameArea" style="display:none;">
         <div id="dealerArea">
