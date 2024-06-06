@@ -13,6 +13,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column; /* Выравниваем элементы в колонку */
+    touch-action: manipulation; /* Предотвращение зума при двойном тапе */
   }
 
   .button {
@@ -37,44 +38,52 @@
     color: black; /* Цвет текста черный */
     font-size: 24px; /* Размер шрифта */
     margin-top: 20px; /* Отступ сверху */
+    text-align: center; /* Выравнивание текста по центру */
   }
 </style>
 </head>
 <body>
 
-<button class="button" onclick="recordReaction()">Нажми, когда зеленая</button>
+<button class="button" id="startButton" onclick="startGame()">Начать игру</button>
 <div class="results" id="reactionTime"></div>
 
 <script>
   let startTime;
   let timer;
+  let gameStarted = false;
 
   function randomDelay() {
-    return Math.random() * 2000 + 1000; // Задержка от 1 до 3 секунд
+    return Math.random() * 2500 + 500; // Задержка от 0.5 до 3 секунд
   }
 
   function changeColor() {
-    document.querySelector('.button').style.backgroundColor = 'green';
+    const button = document.getElementById('startButton');
+    button.style.backgroundColor = 'green';
+    button.innerText = "Нажми, когда зеленая";
     startTime = performance.now();
+    gameStarted = true;
   }
 
-  function setup() {
-    timer = setTimeout(change onColor, randomDelay());
-  }
-
-  function recordReaction() {
-    if (document.querySelector('.button').style.backgroundColor === 'green') {
-      const reactionTime = performance.now() - startTime;
-      document.getElementById('reactionTime').textContent = `Ваше время реакции: ${reactionTime.toFixed(3)} мс`;
-      clearTimeout(timer); // Останавливаем таймер
-      document.querySelector('.button').style.backgroundColor = 'red'; // Возвращаем красный цвет
-      setup(); // Настраиваем следующий цикл
-    } else {
-      document.getElementById('reactionTime').textContent = `Подождите зеленый цвет!`;
+  function startGame() {
+    if (!gameStarted) {
+      const button = document.getElementById('startButton');
+      button.style.backgroundColor = 'red';
+      button.innerText = "Подождите зеленый цвет...";
+      timer = setTimeout(changeColor, randomDelay());
     }
   }
 
-  setup(); // Инициализация первого цикла изменения цвета
+  function recordReaction() {
+    if (gameStarted && document.getElementById('startButton').style.backgroundColor === 'green') {
+      const reactionTime = performance.now() - startTime;
+      document.getElementById('reactionTime').textContent = `Ваше время реакции: ${reactionTime.toFixed(3)} мс. Нажмите 'Начать игру' для повторной попытки.`;
+      gameStarted = false;
+    } else if (gameStarted) {
+      document.getElementById('reactionTime').textContent = "Слишком рано! Попробуйте еще раз.";
+    }
+  }
+
+  document.getElementById('startButton').addEventListener('click', recordReaction);
 </script>
 
 </body>
