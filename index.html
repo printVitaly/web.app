@@ -8,26 +8,31 @@
     background-color: yellow; /* Желтый фон */
     border: none; /* Убираем границу */
     color: black; /* Черный текст */
-    padding: 20px; /* Паддинг */
     text-align: center; /* Выравнивание текста по центру */
     text-decoration: none; /* Убираем подчеркивание */
-    display: inline-block;
     font-size: 16px;
-    margin: 4px 2px;
     cursor: pointer; /* Курсор в виде указателя */
     border-radius: 50%; /* Скругление границ для круглой формы */
-    width: 100px; /* Ширина */
-    height: 100px; /* Высота */
-    line-height: 60px; /* Высота линии */
+    width: 100vw; /* Ширина равна 100% от ширины окна */
+    height: 100vh; /* Высота равна 100% от высоты окна */
+    position: absolute; /* Абсолютное позиционирование */
+    top: 50%; /* Позиционирование сверху на 50% от высоты экрана */
+    left: 50%; /* Позиционирование слева на 50% от ширины экрана */
+    transform: translate(-50%, -50%); /* Смещение для центрирования */
   }
   .count {
+    position: absolute; /* Абсолютное позиционирование */
+    top: 10px; /* Отступ сверху */
+    left: 10px; /* Отступ слева */
     font-size: 24px; /* Размер шрифта счетчика */
+    color: black; /* Цвет текста */
+    z-index: 10; /* Значение z-index для видимости над кнопкой */
   }
 </style>
 </head>
 <body>
 
-<button class="button" onclick="increment()">Кликни!</button>
+<button class="button" onclick="increment()"></button>
 <div class="count" id="counter">0</div>
 
 <script>
