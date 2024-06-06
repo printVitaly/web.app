@@ -73,10 +73,12 @@
             font-size: 24px;
             margin-bottom: 10px;
             text-align: center;
-            white-space: nowrap;
             display: flex;
             justify-content: space-between;
             width: 100%;
+        }
+        #menu .balance #coins {
+            margin-left: 5px; /* Corrects spacing issue */
         }
         #menu .score {
             font-size: 20px;
@@ -106,6 +108,10 @@
             display: flex;
             justify-content: center;
             margin: 10px 0;
+        }
+        #actionButtons {
+            display: flex;
+            justify-content: space-between;
         }
         .card {
             width: 60px;
@@ -187,8 +193,10 @@
             <h2>Ваши карты</h2>
             <div id="playerCards"></div>
         </div>
-        <button id="hitButton" onclick="hit()">Hit</button>
-        <button id="standButton" onclick="stand()">Stand</button>
+        <div id="actionButtons">
+            <button id="hitButton" onclick="hit()">Hit</button>
+            <button id="standButton" onclick="stand()">Stand</button>
+        </div>
         <button id="returnToMenu" onclick="returnToMenu()" style="display:none;">Вернуться в меню</button>
         <h2>Ваш счет: <span id="playerScore"></span></h2>
         <div id="result" class="result" style="display:none;"></div>
