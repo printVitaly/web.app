@@ -91,9 +91,9 @@
         </div>
         <button onclick="hit()">Hit</button>
         <button onclick="stand()">Stand</button>
-        <button onclick="returnToMenu()">Вернуться в меню</button>
+        <button id="returnToMenu" onclick="returnToMenu()" style="display:none;">Вернуться в меню</button>
         <h2>Ваш счет: <span id="playerScore"></span></h2>
-        <div id="result" class="result"></div>
+        <div id="result" class="result" style="display:none;"></div>
     </div>
     <script>
         let coins = 1000;
@@ -116,7 +116,7 @@
             deck = createDeck();
             shuffleDeck(deck);
             dealerCards = [drawCard(), drawCard()];
-            playerCards = [drawCard(), drawCard()];
+                        playerCards = [drawCard(), drawCard()];
             renderCards('initial');
             updateScores();
         }
@@ -139,15 +139,13 @@
                 playerCards.push(drawCard());
                 renderCards();
                 updateScores();
+                if (getTotal(playerCards) >= 21) {
+                    stand();
+                }
             }
-            checkGameEnd();
         }
 
         function stand() {
-            dealerTurn();
-        }
-
-        function dealerTurn() {
             while (getTotal(dealerCards) < 18) {
                 dealerCards.push(drawCard());
             }
@@ -194,13 +192,13 @@
         }
 
         function shuffleDeck(deck) {
-        for (let i = deck.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [deck[i], deck[j]] = [deck[j], deck[i]];
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
         }
-    }
 
-        function renderCards(stage) {
+        function renderCards(stage = 'initial') {
             const dealerDiv = document.getElementById('dealerCards');
             dealerDiv.innerHTML = '';
             dealerCards.forEach((card, index) => {
@@ -226,44 +224,38 @@
             const playerTotal = getTotal(playerCards);
             const dealerTotal = getTotal(dealerCards);
             const resultDiv = document.getElementById('result');
-            let gameEnded = false;
 
+            let resultText = '';
+            let resultClass = '';
             if (playerTotal > 21) {
-                resultDiv.innerHTML = '<span class="lose">ПОРАЖЕНИЕ</span>';
-                gameEnded = true;
-            } else if (dealerTotal > 21) {
-                resultDiv.innerHTML = '<span class="win">ПОБЕДА</span>';
-                gameEnded = true;
-            } else if (playerTotal === 21 && playerCards.length === 2) {
-                resultDiv.innerHTML = '<span class="win">БЛЭКДЖЕК! ПОБЕДА</span>';
-                gameEnded = true;
-            } else if (dealerTotal === 21 && dealerCards.length === 2) {
-                resultDiv.innerHTML = '<span class="lose">БЛЭКДЖЕК у дилера! ПОРАЖЕНИЕ</span>';
-                gameEnded = true;
-            } else if (playerTotal < 21 && dealerTotal >= 18) {
-                if (playerTotal > dealerTotal) {
-                    resultDiv.innerHTML = '<span class="win">ПОБЕДА</span>';
-                    gameEnded = true;
-                } else if (playerTotal < dealerTotal) {
-                    resultDiv.innerHTML = '<span class="lose">ПОРАЖЕНИЕ</span>';
-                    gameEnded = true;
-                } else {
-                    resultDiv.innerHTML = 'НИЧЬЯ';
-                }
+                resultText = 'ПОРАЖЕНИЕ';
+                resultClass = 'lose';
+            } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
+                resultText = 'ПОБЕДА';
+                resultClass = 'win';
+                coins += betAmount * 2;
+            } else if (playerTotal < dealerTotal) {
+                resultText = 'ПОРАЖЕНИЕ';
+                resultClass = 'lose';
+            } else {
+                resultText = 'НИЧЬЯ';
             }
 
-            if (gameEnded) {
-                document.querySelector("#returnToMenu").style.display = 'block';
-                document.getElementById('result').style.display = 'block';
-            }
+            resultDiv.innerHTML = resultText;
+            resultDiv.className = `result ${resultClass}`;
+            resultDiv.style.display = 'block';
+
+            document.getElementById('coins').innerText = coins;
+            document.getElementById('returnToMenu').style.display = 'block';
         }
 
         function returnToMenu() {
             document.getElementById('gameArea').style.display = 'none';
             document.getElementById('menu').style.display = 'block';
-            document.querySelector("#returnToMenu").style.display = 'none';
+            document.getElementById('returnToMenu').style.display = 'none';
             document.getElementById('result').style.display = 'none';
         }
     </script>
 </body>
 </html>
+
