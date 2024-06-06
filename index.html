@@ -82,19 +82,21 @@
             padding: 10px 40px;
         }
         #menu .footer-buttons {
-            display: flex;
-            justify-content: space-between;
             margin-top: 20px;
+        }
+        #returnToMenu {
+            display: block;
+            margin: 20px auto;
         }
     </style>
 </head>
 <body>
     <div id="menu">
         <h1>Blackjack</h1>
-        <div class="balance">Баланс: <span id="coins">1000</span> монет</div>
+        <div class="balance">Balance: <span id="coins">10000</span> 💰</div>
         <button class="play-button" onclick="startGame()">Play</button>
         <div class="footer-buttons">
-            <button onclick="addFunds()">Balance</button>
+            <button onclick="showBalance()">Balance</button>
             <button onclick="showRules()">FAQ</button>
         </div>
     </div>
@@ -109,12 +111,12 @@
         </div>
         <button id="hitButton" onclick="hit()">Hit</button>
         <button id="standButton" onclick="stand()">Stand</button>
-        <button id="returnToMenu" onclick="returnToMenu()" style="display:none; margin-top: 20px;">Вернуться в меню</button>
+        <button id="returnToMenu" onclick="returnToMenu()" style="display:none;">Вернуться в меню</button>
         <h2>Ваш счет: <span id="playerScore"></span></h2>
         <div id="result" class="result" style="display:none;"></div>
     </div>
     <script>
-        let coins = 1000;
+        let coins = 10000;
         let dealerCards = [];
         let playerCards = [];
         let deck = [];
@@ -141,13 +143,8 @@
             updateScores();
         }
 
-        function addFunds() {
-            coins += 1000;
-            document.getElementById('coins').innerText = coins;
-        }
-
-        function showLeaderboard() {
-            alert("Функционал лидеров не реализован.");
+        function showBalance() {
+            alert("Функция пополнения баланса ещё не реализована.");
         }
 
         function showRules() {
