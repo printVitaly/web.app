@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Игра в Блэкджек</title>
     <style>
         body, html {
@@ -30,10 +30,18 @@
             width: 60px;
             height: 90px;
             background-color: #fff;
+            border-radius: 8px;
             border: 1px solid #000;
-            margin: 0 5px;
-            background-size: cover;
+            margin: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
         }
+        .red { color: red; }
+        .black { color: black; }
         h2, h1 {
             color: #333;
         }
@@ -143,7 +151,8 @@
             const newDeck = [];
             suits.forEach(suit => {
                 ranks.forEach(rank => {
-                    newDeck.push({ suit, rank, image: `images/${rank}_of_${suit}.png` });
+                    let color = (suit === 'Hearts' || suit === 'Diamonds') ? 'red' : 'black';
+                    newDeck.push({ suit, rank, color });
                 });
             });
             return newDeck;
@@ -158,17 +167,17 @@
 
         function renderCards() {
             const dealerDiv = document.getElementById('dealerCards');
-            dealerDiv.innerHTML = '<div class="card" style="background-image:url(\'' + dealerCards[0].image + '\')"></div><div class="card"></div>';
+            dealerDiv.innerHTML = '<div class="card black" style="visibility: hidden;">' + dealerCards[1].rank + '</div><div class="card ' + dealerCards[0].color + '">' + dealerCards[0].rank + ' of ' + dealerCards[0].suit + '</div>';
             const playerDiv = document.getElementById('playerCards');
             playerDiv.innerHTML = '';
             playerCards.forEach(card => {
-                playerDiv.innerHTML += `<div class="card" style="background-image:url('${card.image}')"></div>`;
+                playerDiv.innerHTML += '<div class="card ' + card.color + '">' + card.rank + ' of ' + card.suit + '</div>';
             });
         }
 
         function updateScores() {
             playerScore = getTotal(playerCards);
-            document.getElementById('playerScore').innerText = playerPlay;
+            document.getElementById('playerScore').innerText = playerScore;
         }
 
         function checkGameEnd() {
