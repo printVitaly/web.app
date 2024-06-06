@@ -16,6 +16,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
+            position: relative;
+            overflow: hidden;
         }
         #menu, #gameArea {
             padding: 20px;
@@ -46,6 +48,7 @@
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             position: relative;
+            z-index: 1;
         }
         #menu::before {
             content: '🎲';
@@ -56,16 +59,8 @@
             transform: rotate(45deg);
             opacity: 0.1;
         }
-        #menu::after {
-            content: '♠️♥️♦️♣️';
-            font-size: 80px;
-            position: absolute;
-            bottom: -40px;
-            left: -40px;
-            opacity: 0.1;
-        }
         .pokersymbol {
-            font-size: 80px;
+            font-size: 100px;
             position: absolute;
             opacity: 0.1;
         }
@@ -95,6 +90,7 @@
         #menu .play-button {
             background-color: #4caf50;
             color: #fff;
+            width: 100%;
         }
         #menu .balance-button {
             background-color: #0288d1;
@@ -190,13 +186,13 @@
         <button class="play-button" onclick="startGame()">Play</button>
         <button class="balance-button" onclick="showBalance()">Balance</button>
         <button class="rules-button" onclick="showRules()">Rules</button>
-        <div class="pokersymbol" id="symbol1">♠️</div>
-        <div class="pokersymbol" id="symbol2">♥️</div>
-        <div class="pokersymbol" id="symbol3">♦️</div>
-        <div class="pokersymbol" id="symbol4">♣️</div>
-        <div class="pokersymbol" id="symbol5">♠️</div>
-        <div class="pokersymbol" id="symbol6">♦️</div>
     </div>
+    <div class="pokersymbol" id="symbol1">♠️</div>
+    <div class="pokersymbol" id="symbol2">♥️</div>
+    <div class="pokersymbol" id="symbol3">♦️</div>
+    <div class="pokersymbol" id="symbol4">♣️</div>
+    <div class="pokersymbol" id="symbol5">♠️</div>
+    <div class="pokersymbol" id="symbol6">♦️</div>
     <div id="gameArea" style="display:none;">
         <div id="dealerArea">
             <h2>Карты дилера</h2>
@@ -344,20 +340,25 @@
             let resultText = '';
             let resultClass = '';
             if (playerTotal > 21) {
-                resultText = 'ПОРАЖЕНИЕ';
+                resultText = 'ПОРАЖЕНИЕ: У вас перебор.';
                 resultClass = 'lose';
                 losses++;
-            } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
-                resultText = 'ПОБЕДА';
+            } else if (dealerTotal > 21) {
+                resultText = 'ПОБЕДА: У дилера перебор.';
+                resultClass = 'win';
+                coins += betAmount * 2;
+                wins++;
+            } else if (playerTotal > dealerTotal) {
+                resultText = 'ПОБЕДА: У вас больше очков.';
                 resultClass = 'win';
                 coins += betAmount * 2;
                 wins++;
             } else if (playerTotal < dealerTotal) {
-                resultText = 'ПОРАЖЕНИЕ';
+                resultText = 'ПОРАЖЕНИЕ: У дилера больше очков.';
                 resultClass = 'lose';
                 losses++;
             } else {
-                resultText = 'НИЧЬЯ';
+                resultText = 'НИЧЬЯ: У вас одинаковое количество очков.';
             }
 
             resultDiv.innerHTML = resultText;
