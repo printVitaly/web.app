@@ -12,6 +12,9 @@
             margin: 0;
             padding: 0;
             height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         #menu, #gameArea {
             padding: 20px;
@@ -39,7 +42,6 @@
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             max-width: 400px;
-            margin: 50px auto;
         }
         #menu h1 {
             font-size: 48px;
@@ -63,6 +65,7 @@
         }
         #gameArea {
             text-align: center;
+            width: 100%;
         }
         #dealerCards, #playerCards {
             display: flex;
@@ -174,7 +177,7 @@
         }
 
         function showRules() {
-            alert("Игрок и дилер получают по две карты. Цель игры - набрать 21 очко или близкое к этому число, не превышая его. Карты 'J', 'Q', 'K' стоят 10 очков, туз может стоить 1 или 11 очков, остальные карты соответствуют своему номиналу.");
+            alert("Бля, загугли сам.");
         }
 
         function hit() {
