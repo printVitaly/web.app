@@ -2,44 +2,55 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Кликер</title>
+<title>Кликер-монета</title>
 <style>
-  .button {
-    background-color: yellow; /* Желтый фон */
-    border: none; /* Убираем границу */
-    color: black; /* Черный текст */
-    text-align: center; /* Выравнивание текста по центру */
-    text-decoration: none; /* Убираем подчеркивание */
-    font-size: 16px;
-    cursor: pointer; /* Курсор в виде указателя */
-    border-radius: 50%; /* Скругление границ для круглой формы */
-    width: 100vw; /* Ширина равна 100% от ширины окна */
-    height: 100vh; /* Высота равна 100% от высоты окна */
-    position: absolute; /* Абсолютное позиционирование */
-    top: 50%; /* Позиционирование сверху на 50% от высоты экрана */
-    left: 50%; /* Позиционирование слева на 50% от ширины экрана */
-    transform: translate(-50%, -50%); /* Смещение для центрирования */
+  body {
+    font-family: Arial, sans-serif; /* Устанавливаем шрифт */
+    background-color: #f4f4f4; /* Цвет фона */
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Выравниваем элементы в колонку */
   }
-  .count {
-    position: absolute; /* Абсолютное позиционирование */
-    top: 10px; /* Отступ сверху */
-    left: 10px; /* Отступ слева */
-    font-size: 24px; /* Размер шрифта счетчика */
-    color: black; /* Цвет текста */
-    z-index: 10; /* Значение z-index для видимости над кнопкой */
+
+  .button {
+    background-color: #d4af37; /* Золотистый цвет */
+    border: 3px solid #c5a231; /* Темно-золотая граница */
+    box-shadow: 0 0 10px #b2972f; /* Тень для эффекта глубины */
+    color: black;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 50vw; /* Ширина 50% от ширины экрана */
+    height: 50vw; /* Высота также 50%, чтобы сохранить пропорции */
+    max-width: 300px; /* Максимальная ширина для больших экранов */
+    max-height: 300px; /* Максимальная высота для больших экранов */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold; /* Жирное начертание текста */
+    text-transform: uppercase; /* Все буквы заглавные */
+  }
+
+  .earnings {
+    color: white; /* Белый цвет текста */
+    font-size: 20px; /* Размер шрифта */
+    margin-bottom: 20px; /* Отступ снизу */
   }
 </style>
 </head>
 <body>
 
-<button class="button" onclick="increment()"></button>
-<div class="count" id="counter">0</div>
+<div class="earnings">Вы заработали: <span id="counter">0</span></div>
+<button class="button" onclick="increment()">Нажми меня</button>
 
 <script>
-  var count = 0; // Инициализируем счетчик
+  var count = 0;
   function increment() {
-    count += 1; // Увеличиваем счетчик на 1
-    document.getElementById('counter').innerHTML = count; // Обновляем отображение счетчика
+    count += 1;
+    document.getElementById('counter').innerHTML = count;
   }
 </script>
 
