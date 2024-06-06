@@ -1,108 +1,183 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Тест на реакцию</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #87CEEB;
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    touch-action: manipulation;
-  }
-
-  .button {
-    background-color: red;
-    border: none;
-    color: white;
-    font-size: 32px;
-    cursor: pointer;
-    border-radius: 50%;
-    width: 120vw;
-    height: 120vw;
-    max-width: 600px;
-    max-height: 600px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-
-  .menu {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .results {
-    color: black;
-    font-size: 24px;
-    margin-top: 20px;
-    text-align: center;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack Game</title>
+    <style>
+        body, html {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #eee;
+            margin: 0;
+            padding: 0;
+        }
+        #menu, #gameArea {
+            padding: 20px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #dealerCards, #playerCards {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .card {
+            width: 60px;
+            height: 90px;
+            background-color: #fff;
+            border: 1px solid #000;
+            margin: 0 5px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
+    <div id="menu">
+        <h1>Blackjack</h1>
+        <div>Your Coins: <span id="coins">1000</span></div>
+        <button onclick="startGame()">Start Game</button>
+        <button onclick="addFunds()">Add Funds</button>
+        <button onclick="showLeaderboard()">Top Players</button>
+    </div>
+    <div id="gameArea" style="display:none;">
+        <div id="dealerArea">
+            <h2>Dealer's Cards</h2>
+            <div id="dealerCards"></div>
+        </div>
+        <div id="playerArea">
+            <h2>Your Cards</h2>
+            <div id="playerCards"></div>
+        </div>
+        <button onclick="hit()">Hit</button>
+        <button onclick="stand()">Stand</button>
+        <div id="result"></div>
+    </div>
+    <script>
+        let coins = 1000;
+        let dealerCards = [];
+        let playerCards = [];
+        let deck = [];
 
-<div class="menu">
-  <button class="button" onclick="startGame()">Начать игру</button>
-  <button class="button" onclick="showResults()">Предыдущие результаты</button>
-</div>
-<div class="results" id="reactionTime"></div>
+        function startGame() {
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'block';
+            deck = createDeck();
+            shuffleDeck(deck);
+            dealerCards = [drawCard(), drawTotal()];
+            playerCards = [drawCard(), draw];
+            renderCards();
+        }
 
-<script>
-  let startTime;
-  let timer;
-  let gameStarted = false;
-  let results = [];
+        function addFunds() {
+            coins += 1000;
+            document.getElementById('coins').innerText = coins;
+        }
 
-  function randomDelay() {
-    return Math.random() * 2500 + 500;
-  }
+        function showLeaderboard() {
+            alert("Leaderboard functionality not implemented.");
+        }
 
-  function changeColor() {
-    const button = document.querySelector('.menu button:first-child');
-    button.style.backgroundColor = 'green';
-    button.innerText = "Нажми, когда зеленая";
-    startTime = performance.now();
-    gameStarted = true;
-  }
+        function hit() {
+            playerCards.push(drawCard());
+            renderCards();
+            checkGameEnd();
+        }
 
-  function startGame() {
-    if (!gameStarted) {
-      const button = document.querySelector('.menu button:first-child');
-      button.style.backgroundColor = 'red';
-      button.innerText = "Подождите зеленый цвет...";
-      timer = setTimeout(changeColor, randomDelay());
-      document.getElementById('reactionTime').textContent = '';
-    }
-  }
+        function stand() {
+            dealerTurn();
+        }
 
-  function recordReaction() {
-    if (gameStarted && document.querySelector('.menu button:first-child').style.backgroundColor === 'green') {
-      const reactionTime = Math.round(performance.now() - startTime);
-      results.push(reactionTime);
-      document.getElementById('reactionTime').textContent = `Ваше время реакции: ${reactionTime} мс. Нажмите 'Начать игру' для повторной попытки.`;
-      gameStarted = false;
-    } else if (gameStarted) {
-      document.getElementById('reactionTime').textContent = "Слишком рано! Попробуйте еще раз.";
-    }
-  }
+        function dealerTurn() {
+            while (getTotal(dealerCards) < 17) {
+                dealerCards.push(drawCard());
+                renderCards();
+                checkGameEnd();
+            }
+        }
 
-  function showResults() {
-    let resultText = results.length ? 'Ваши предыдущие результаты (в мс): ' + results.join(', ') : 'Нет предыдущих результатов.';
-    document.getElementById('reactionTime').textContent = resultText;
-  }
+        function getTotal(cards) {
+            let total = 0;
+            let aceCount = 0;
+            cards.forEach(card => {
+                if (card.rank === 'A') {
+                    aceCount++;
+                    total += 11;
+                } else if (['J', 'Q', 'K'].includes(card.rank)) {
+                    total += 10;
+                } else {
+                    total += card.rank;
+                }
+            });
+            while (total > 21 && aceCount > 0) {
+                total -= 10;
+                aceCount--;
+            }
+            return total;
+        }
 
-  document.querySelector('.menu button:first-child').addEventListener('click', recordReaction);
-</script>
+        function drawCard() {
+            return deck.pop();
+        }
 
+        function createDeck() {
+            const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
+            const ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A'];
+            const newDeck = [];
+            suits.forEach(suit => {
+                ranks.forEach(rank => {
+                    newDeck.push({ suit, rank });
+                });
+            });
+            return newDeck;
+        }
+
+        function shuffleDeck(deck) {
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+        }
+
+        function renderCards() {
+            const dealerDiv = document.getElementById('dealerCards');
+            dealerDiv.innerHTML = '';
+            dealerCards.forEach(card => {
+                dealerDiv.innerHTML += `<div class="card">${card.rank} of ${card.suit}</div>`;
+            });
+
+            const playerDiv = document.getElementById('playerCards');
+            playerDiv.innerHTML = '';
+            playerCards.forEach(card => {
+                playerDiv.innerHTML += `<div class="card">${card.rank} of ${card.suit}</div>`;
+            });
+        }
+
+        function checkGameEnd() {
+            const playerTotal = getTotal(playerCards);
+            const dealerTotal = getTotal(dealerCards);
+            const resultDiv = document.getElementById('result');
+            if (playerTotal > 21) {
+                resultDiv.innerText = 'Player busts! Dealer wins.';
+            } else if (dealerTotal > 21) {
+                resultDiv.innerText = 'Dealer busts! Player wins.';
+            } else if (playerTotal === 21 && playerCards.length === 2) {
+                resultDiv.innerText = 'Blackjack! Player wins.';
+            } else if (dealerTotal === 21 && dealerCards.length === 2) {
+                resultDiv.innerText = 'Blackjack! Dealer wins.';
+            } else if (playerTotal >= dealerTotal && playerCards.length >= 2) {
+                resultDiv.innerText = 'Player stands. Final decision pending.';
+            }
+        }
+    </script>
 </body>
 </html>
