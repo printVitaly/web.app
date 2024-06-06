@@ -3,10 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мое Telegram Приложение</title>
+    <title>Telegram Web App</title>
 </head>
 <body>
-    <h1>Приветствие в Telegram!</h1>
-    <p>Это пример простого приложения, работающего внутри Telegram.</p>
+    <h1>Привет, Telegram!</h1>
+    <button onclick="sendData()">Отправить данные в чат</button>
+    <script>
+        function sendData() {
+            if (window.Telegram) {
+                Telegram.WebApp.sendData("Привет из Web App!");
+            }
+        }
+    </script>
 </body>
 </html>
