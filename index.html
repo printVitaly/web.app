@@ -8,13 +8,14 @@
         body, html {
             font-family: 'Arial', sans-serif;
             text-align: center;
-            background-color: #e0f7fa; /* Светло-голубой фон */
+            background-color: #0288d1; /* Синий фон */
             margin: 0;
             padding: 0;
             height: 100%;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
         }
         #menu, #gameArea {
             padding: 20px;
@@ -36,11 +37,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #0288d1;
             color: #fff;
-            padding: 40px 20px;
+            padding: 20px;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            width: 100%;
             max-width: 400px;
         }
         #menu h1 {
@@ -49,7 +51,16 @@
         }
         #menu .balance {
             font-size: 24px;
+            margin-bottom: 10px;
+        }
+        #menu .scoreboard {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
             margin-bottom: 30px;
+        }
+        #menu .score {
+            font-size: 20px;
         }
         #menu .play-button {
             background-color: #4caf50;
@@ -125,6 +136,10 @@
     <div id="menu">
         <h1>Blackjack</h1>
         <div class="balance">Balance: <span id="coins">10000</span> 💰</div>
+        <div class="scoreboard">
+            <div class="score">Wins: <span id="wins">0</span></div>
+            <div class="score">Losses: <span id="losses">0</span></div>
+        </div>
         <button class="play-button" onclick="startGame()">Play</button>
         <button class="balance-button" onclick="showBalance()">Balance</button>
         <button class="rules-button" onclick="showRules()">Rules</button>
@@ -146,6 +161,8 @@
     </div>
     <script>
         let coins = 10000;
+        let wins = 0;
+        let losses = 0;
         let dealerCards = [];
         let playerCards = [];
         let deck = [];
@@ -276,13 +293,16 @@
             if (playerTotal > 21) {
                 resultText = 'ПОРАЖЕНИЕ';
                 resultClass = 'lose';
+                losses++;
             } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
                 resultText = 'ПОБЕДА';
                 resultClass = 'win';
                 coins += betAmount * 2;
+                wins++;
             } else if (playerTotal < dealerTotal) {
                 resultText = 'ПОРАЖЕНИЕ';
                 resultClass = 'lose';
+                losses++;
             } else {
                 resultText = 'НИЧЬЯ';
             }
@@ -295,6 +315,12 @@
             document.getElementById('hitButton').disabled = true;
             document.getElementById('standButton').disabled = true;
             document.getElementById('returnToMenu').style.display = 'block';
+            updateScoreboard();
+        }
+
+        function updateScoreboard() {
+            document.getElementById('wins').innerText = wins;
+            document.getElementById('losses').innerText = losses;
         }
 
         function returnToMenu() {
