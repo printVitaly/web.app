@@ -1,19 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Web App</title>
+<meta charset="UTF-8">
+<title>Кликер</title>
+<style>
+  .button {
+    background-color: yellow; /* Желтый фон */
+    border: none; /* Убираем границу */
+    color: black; /* Черный текст */
+    padding: 20px; /* Паддинг */
+    text-align: center; /* Выравнивание текста по центру */
+    text-decoration: none; /* Убираем подчеркивание */
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer; /* Курсор в виде указателя */
+    border-radius: 50%; /* Скругление границ для круглой формы */
+    width: 100px; /* Ширина */
+    height: 100px; /* Высота */
+    line-height: 60px; /* Высота линии */
+  }
+  .count {
+    font-size: 24px; /* Размер шрифта счетчика */
+  }
+</style>
 </head>
 <body>
-    <h1 style="color:#ff0000"> hello epta </h1>
-    <button onclick="sendData()">кнопка по приколу</button>
-    <script>
-        function sendData() {
-            if (window.Telegram) {
-                Telegram.WebApp.sendData("Привет из Web App!");
-            }
-        }
-    </script>
+
+<button class="button" onclick="increment()">Кликни!</button>
+<div class="count" id="counter">0</div>
+
+<script>
+  var count = 0; // Инициализируем счетчик
+  function increment() {
+    count += 1; // Увеличиваем счетчик на 1
+    document.getElementById('counter').innerHTML = count; // Обновляем отображение счетчика
+  }
+</script>
+
 </body>
 </html>
