@@ -6,27 +6,28 @@
 <style>
   body {
     font-family: Arial, sans-serif; /* Устанавливаем шрифт */
-    background-color: #f4f4f4; /* Цвет фона */
+    background-color: #87CEEB; /* Голубой цвет фона */
     margin: 0;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column; /* Выравниваем элементы в колонку */
+    touch-action: manipulation; /* Предотвращение зума при двойном тапе */
   }
 
   .button {
     background-color: #d4af37; /* Золотистый цвет */
     border: 3px solid #c5a231; /* Темно-золотая граница */
-    box-shadow: 0 0 10px #b2972f; /* Тень для эффекта глубины */
+    box-shadow: 0 0 20px #b2972f; /* Тень для эффекта глубины */
     color: black;
-    font-size: 16px;
+    font-size: 24px; /* Увеличенный размер шрифта */
     cursor: pointer;
     border-radius: 50%;
-    width: 50vw; /* Ширина 50% от ширины экрана */
-    height: 50vw; /* Высота также 50%, чтобы сохранить пропорции */
-    max-width: 300px; /* Максимальная ширина для больших экранов */
-    max-height: 300px; /* Максимальная высота для больших экранов */
+    width: 60vw; /* Увеличенная ширина до 60% от ширины экрана */
+    height: 60vw; /* Увеличенная высота до 60% от высоты экрана */
+    max-width: 400px; /* Максимальная ширина для больших экранов */
+    max-height: 400px; /* Максимальная высота для больших экранов */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -35,8 +36,8 @@
   }
 
   .earnings {
-    color: white; /* Белый цвет текста */
-    font-size: 20px; /* Размер шрифта */
+    color: black; /* Цвет текста теперь черный */
+    font-size: 24px; /* Размер шрифта */
     margin-bottom: 20px; /* Отступ снизу */
   }
 </style>
@@ -48,8 +49,16 @@
 
 <script>
   var count = 0;
+  var pointsPerClick = 1;
+
   function increment() {
-    count += 1;
+    if (count >= 100) {
+      pointsPerClose = 4;
+    } else if (count >= 10) {
+      pointsPerClick = 2;
+    }
+    
+    count += pointsPerClick;
     document.getElementById('counter').innerHTML = count;
   }
 </script>
